@@ -245,14 +245,14 @@
             });
         };
         self.refresh = function (pageNumber) {
-            if (/\d+/.test(pageNumber) && pageNumber >= 1 && pageNumber < self.options.totalPages) {
+            if (/\d+/.test(pageNumber) && pageNumber >= 1 && pageNumber <= self.options.totalPages) {
                 if (self.fireEvent(pageNumber, 'change')) {
                     self.switchPage(pageNumber);
                 }
                 self.switchPage(pageNumber);
             } else {
-                if (self.fireEvent(currentPage, 'change')) {//触发onChange事件
-                    self.switchPage(currentPage);
+                if (self.fireEvent(self.options.currentPage, 'change')) {//触发onChange事件
+                    self.switchPage(self.options.currentPage);
                 }
             }
 
