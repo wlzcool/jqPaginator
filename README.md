@@ -20,6 +20,10 @@
 开发文件位于src目录，编译后的最终文件位于dist目录
 
 ##版本更新
+####1.2.2
+在原来的基础上增加了refresh事件
+`$('#dividePage').jqPaginator('refresh');`//表示刷新当前页信息
+`$('#dividePage').jqPaginator('refresh',1);`//表示刷新第1页信息
 ####1.2.1
 在原来的基础上增加了pageSize下拉列表，通过option中的changePageSize来进行控制
 该参数可接受 changePageSize:"20|30|50"或者changePageSize:true
