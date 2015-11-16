@@ -25,10 +25,9 @@
             }
 
             self.options = $.extend({}, $.jqPaginator.defaultOptions, options);
-            
+            self.extendJquery();
             if (self.verify()) {
-                self.render();
-                self.extendJquery();
+                self.render();                
                 self.fireEvent(this.options.currentPage, 'init');
             }
 
