@@ -25,18 +25,22 @@
             }
 
             self.options = $.extend({}, $.jqPaginator.defaultOptions, options);
+            
+            if (self.verify()) {
+                self.render();
+                self.extendJquery();
+                self.fireEvent(this.options.currentPage, 'init');
+            }
 
-            self.verify();
-
-            self.extendJquery();
-
-            self.render();
-
-            self.fireEvent(this.options.currentPage, 'init');
+            
         };
 
         self.verify = function () {
             var opts = self.options;
+
+            if (!opts.totalPages && !opts.totalCounts) {
+                return false;
+            }
 
             if (!self.isNumber(opts.totalPages)) {
                 throw new Error('[jqPaginator] type error: totalPages');
@@ -56,14 +60,6 @@
 
             if (!self.isNumber(opts.visiblePages)) {
                 throw new Error('[jqPaginator] type error: visiblePages');
-            }
-
-            if (!opts.totalPages && !opts.totalCounts) {
-                throw new Error('[jqPaginator] totalCounts or totalPages is required');
-            }
-
-            if (!opts.totalPages && !opts.totalCounts) {
-                throw new Error('[jqPaginator] totalCounts or totalPages is required');
             }
 
             if (!opts.totalPages && opts.totalCounts && !opts.pageSize) {
@@ -135,7 +131,7 @@
 
         self.setPageSizeOption = function (sizeStr) {
             var pageSizeStr = sizeStr;
-            return '<input type="text" id="jqPageSize" value="' + sizeStr + '" />条/页';
+            return  '<input type="text" id="jqPageSize" value="'+sizeStr+'" />条/页';
         }
 
         self.setStatus = function () {
@@ -201,7 +197,9 @@
 
         self.switchPage = function (pageIndex) {
             self.options.currentPage = pageIndex;
-            self.render();
+            if (self.verify()) {
+                self.render();
+            }
         };
 
         self.fireEvent = function (pageIndex, type) {
@@ -212,15 +210,13 @@
             switch (method) {
                 case 'option':
                     self.options = $.extend({}, self.options, options);
-                    self.verify();
-                    self.render();
+                    if (self.verify()) {
+                        self.render();
+                    }
                     break;
                 case 'destroy':
                     self.$container.empty();
                     self.$container.removeData('jqPaginator');
-                    break;
-                case 'refresh':
-                    self.refresh(options);
                     break;
                 default:
                     throw new Error('[jqPaginator] method "' + method + '" does not exist');
@@ -238,25 +234,14 @@
                 if ($el.hasClass(opts.disableClass) || $el.hasClass(opts.activeClass)) {
                     return;
                 }
+
                 var pageIndex = +$el.attr('jp-data');
                 if (self.fireEvent(pageIndex, 'change')) {
                     self.switchPage(pageIndex);
                 }
             });
         };
-        self.refresh = function (pageNumber) {
-            if (/\d+/.test(pageNumber) && pageNumber >= 1 && pageNumber <= self.options.totalPages) {
-                if (self.fireEvent(pageNumber, 'change')) {
-                    self.switchPage(pageNumber);
-                }
-                self.switchPage(pageNumber);
-            } else {
-                if (self.fireEvent(self.options.currentPage, 'change')) {//触发onChange事件
-                    self.switchPage(self.options.currentPage);
-                }
-            }
 
-        };
         self.init();
 
         return self.$container;
