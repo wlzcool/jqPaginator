@@ -78,6 +78,7 @@
             if (opts.totalPages < 1) {
                 throw new Error('[jqPaginator] totalPages cannot be less currentPage');
             }
+            return true;
         };
 
         self.extendJquery = function () {
